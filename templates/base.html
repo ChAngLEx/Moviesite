@@ -1,0 +1,62 @@
+{#  Sign-In Sign-Up #}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+{% load staticfiles %}
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    {# Web Content #}
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    {# Top #}
+    {% block topfiles %}{% endblock topfiles %}
+</head>
+<body>
+{# Web Top Block #}
+{% block header_con %}
+    <div class="header_con">
+        <div class="header">
+            <div class="welcome fl">Wlcome to MyMovieSite!</div>
+            <div class="fr">
+        {% if user.is_authenticated %}
+                    <div class="login_btn fl">
+                        Welcome：<em>{{ user.username }}</em>
+            <span>|</span>
+                    <a href="{% url 'logout' %}">Logout</a>
+                </div>
+        {% else %}
+                <div class="login_btn fl">
+                    <a href="{% url 'user:login' %}">Lougin</a>
+                    <span>|</span>
+                    <a href="{% url 'user:register' %}">Register</a>
+                </div>
+        {% endif %}
+
+            </div>
+        </div>      
+    </div>
+{% endblock header_con %}
+
+
+{# Web Body Block #}
+{% block body %}{% endblock body %}
+
+    <div class="footer">
+        <div class="foot_link">
+            <a href="#">About Us</a>
+            <span>|</span>
+            <a href="#">TEAM3</a>
+            <span>|</span>
+            <a href="#">OOD</a>
+            <span>|</span>
+            <a href="#">Contact</a>        
+        </div>
+        <p>CopyRight © 2020 Geogre Washtington SEAS All Rights Reserved</p>
+        <p>TEL：202-****888    *******8</p>
+    </div>
+    {# 网页底部html元素块 #}
+    {% block bottom %}{% endblock bottom %}
+    {# 网页底部引入文件块 #}
+    {% block bottomfiles %}{% endblock bottomfiles %}
+</body>
+</html>

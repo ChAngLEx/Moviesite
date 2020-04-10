@@ -1,0 +1,24 @@
+{% extends 'base_detail_list.html' %}
+{% block title %}MyMovieSite-MovieList{% endblock title %}
+{% block main_content %}
+  <div class="breadcrumb">
+    <a href="#">All Movie</a>
+    <span>></span>
+    <a href="#">{{ movie.name }}</a>
+  </div>
+
+
+    <div class="r_wrap fr clearfix">
+
+      <ul class="movie_list clearfix">
+        {% for sku in skus_page %}
+        <li>
+          <a href="{% url 'movie:detail' movie.id %}"></a>
+          <h4><a href="{% url 'movies:detail' movie.id %}">{{ movie.name }}</a></h4>
+        </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+{% endblock main_content %}

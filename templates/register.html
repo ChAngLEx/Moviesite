@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}MyMovieSite:Register{% endblock title %}
+{% block topfiles %}
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+{% endblock topfiles %}
+{% block header_con %}{% endblock header_con %}
+{% block search_bar %}{% endblock search_bar %}
+{% block body %}
+    <div class="register_con">
+        <div class="l_con fl">
+            <div class="reg_slogan">OOD TEAM 3</div>
+            <div class="reg_banner"></div>
+        </div>
+
+        <div class="r_con fr">
+            <div class="reg_title clearfix">
+                <h1>Register</h1>
+                <a href="#">Login</a>
+            </div>
+            <div class="reg_form clearfix">
+                <form method="post" action="/user/register/">
+                    {% csrf_token %}
+                <ul>
+                    <li>
+                        <label>Username:</label>
+                        <input type="text" name="user_name" id="user_name">
+                        <span class="error_tip">Tips</span>
+                    </li>                   
+                    <li>
+                        <label>Password:</label>
+                        <input type="password" name="pwd" id="pwd">
+                        <span class="error_tip">Tips</span>
+                    </li>
+                    <li>
+                        <label>Comfirm Password:</label>
+                        <input type="password" name="cpwd" id="cpwd">
+                        <span class="error_tip">Tips</span>
+                    </li>
+                    <li>
+                        <label>Email:</label>
+                        <input type="text" name="email" id="email">
+                        <span class="error_tip">Tips</span>
+                    </li>
+                    <li class="agreement">
+                        <input type="checkbox" name="allow" id="allow" checked="checked">
+                        <label>Concent"User Agreement"</label>
+                        <span class="error_tip2">Tips</span>
+                    </li>
+                    <li class="reg_sub">
+                        <input type="submit" value="Register" name="">
+                    </li>
+                </ul>               
+                </form>
+                {{ errmsg }}
+            </div>
+
+        </div>
+
+    </div>
+{% endblock body %}

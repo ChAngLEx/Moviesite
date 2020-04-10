@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}MyMovieSite-HomePage{% endblock title %}
+{% block topfiles %}
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/slide.js' %}"></script>
+{% endblock topfiles %}
+{% block body %}
+    <div class="navbar_con">
+        <div class="navbar">
+            <h1 class="fl">Vote</h1>
+            <ul class="navlist fl">
+                <li><a href="">Event</a></li>
+                <li class="interval">|</li>
+                <li><a href="">Group</a></li>
+                <li class="interval">|</li>
+                <li><a href="">User Center</a></li>
+            </ul>
+        </div>
+    </div>
+
+ {% for movie in movies %}
+    <div class="list_model">
+        <div class="list_title clearfix">
+            <h3 class="fl" id="model0{{ forloop.counter }}">{{ movie.name }}</h3>
+            <a href="#" class="movie_more fr" id="movie_more">More ></a>
+        </div>
+    </div>
+{% endfor %}
+
+ {% for group in groups %}
+    <div class="list_model">
+        <div class="list_title clearfix">
+            <h3 class="fl" id="model0{{ forloop.counter }}">{{ group.name }}</h3>
+            <a href="#" class="group_more fr" id="group_more">More ></a>
+        </div>
+    </div>
+{% endfor %}
+
+{% endblock body %}
