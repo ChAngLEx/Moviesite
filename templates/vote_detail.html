@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}MyMovieSite:Vote{% endblock title %}
+{% block topfiles %}
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+{% endblock topfiles %}
+{% block header_con %}{% endblock header_con %}
+{% block search_bar %}{% endblock search_bar %}
+{% block body %}
+    <div class="register_con">
+        <div class="l_con fl">
+            <div class="reg_slogan">OOD TEAM 3</div>
+            <div class="reg_banner"></div>
+        </div>
+
+        <div class="r_con fr">
+            <div class="reg_title clearfix">
+                <h1>Vote Page</h1>
+                <a href="{% url 'group:vote' %}">Back</a>
+            </div>
+            <div class="reg_form clearfix">
+                <form method="post" action="/group/vote_detail/">
+                    {% csrf_token %}
+                <ul>
+                    <li>
+                        <h4>Please Input your vote results: yes or no</h4>
+                        <input type="text" name="vote_name" id="vote_name">
+                    </li>
+
+                    <li class="reg_sub">
+                        <input type="submit" value="Submit" name="">
+                    </li>
+                </ul>
+                </form>
+                {{ errmsg }}
+            </div>
+
+        </div>
+
+    </div>
+{% endblock body %}

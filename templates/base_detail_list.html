@@ -8,15 +8,15 @@
                 <h1>All Movies</h1>
                 <span></span>
                 <ul class="subnav">
-                    {% for type in types %}
-                    <li><a href="{% url 'movie:list' type.id 1 %}" class="{{ type.logo }}">{{ type.name }}</a></li>
+                    {% for movie in movies %}
+                    <li><a href="{% url 'group:index' movie.id 1 %}" class="{{ movie.logo }}">{{ movie.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
             <ul class="navlist fl">
-                <li><a href="">Home</a></li>
+                <li><a href="{% url 'movie:list' %}">Movie</a></li>
                 <li class="interval">|</li>
-                <li><a href="">Group</a></li>
+                <li><a href="{ url 'group:index' }">Group</a></li>
             </ul>
         </div>
     </div>

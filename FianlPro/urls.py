@@ -21,7 +21,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('group/', include('group.urls')),
-    path('user/', include('user.urls')),
-    path('movie/', include('movie.urls')),
+    path('group/', include(('group.urls', 'group'), namespace='group'), name='group'),
+    path('user/', include(('user.urls', 'user'), namespace='user'), name='user'),
+    path('movie/', include(('movie.urls', 'movie'), namespace='movie'), name='movie'),
 ]

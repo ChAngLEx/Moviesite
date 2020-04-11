@@ -1,9 +1,11 @@
+import sys
+sys.path.append(r"C:\Users\lylal\OneDrive\Desktop\my_project\FianlPro")
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import View
+from django.http import HttpResponse, JsonResponse
 from django_redis import get_redis_connection
 from django.core.cache import cache
-from utils.mixin import LoginRequiredMixin
 from user.models import User
 from .models import Group, UserGroup, Event, Vote, VoteRecord
 from movie.models import Movie
@@ -11,166 +13,151 @@ from movie.models import Movie
 class IndexView(View):
     def get(self, request):
         '''显示首页'''
-        # 尝试从缓存中获取数据
-        context = cache.get('index_page_data')
-        
-        if context is None:
-            print('设置缓存')
-            # 缓存中没有数据
-            # 获取商品的种类信息
-            movies = Movie.objects.all()
-            groups = Group.objects.all()
+        groups = Group.objects.all()
 
-            context = {'movies': movies,
-                       'groups': groups,
-                       }
-            # 设置缓存
-            # key  value timeout
-            cache.set('index_page_data', context, 3600)
-    
+        context = {'groups': groups}
 
         return render(request, 'index.html', context)
 
 class GroupCreateView(View):
+    def get(self, request):
+
+        return render(request, 'create_group.html')
 
     def post(self, request):
+        group_user = request.POST.get('user_name')
+        group_name = request.POST.get('group_name')
         user = request.user
 
-        if not user.is_authenticated:
-            return JsonResponse({'res':0, 'errmsg':'Required sign in'})
 
-        if user.user_type == 0:
-            return JsonResponse({'res':1, 'errmsg': 'illegal user'})
+        if not user.is_authenticated:
+            return render(request, 'create_group.html', {'errmsg': 'Required sign in'})
+
+        #if not all([group_user, group_name]):
+            # lack data
+            #return render(request, 'create_group.html', {'errmsg': 'Requiring more information'})
         
-        group_name = request.POST.get('group_name')
+        #if user.user_type == 0:
+            #return render(request, 'create_group.html', {'errmsg': 'illegal user'})
 
         try:
             group = Group.objects.get(group_name=group_name)
-        
+
         except Group.DoesNotExist:
             # group name不存在
             group = None
 
         if group:
             # 用户名已存在
-            return JsonResponse({'res':2, 'errmsg':'group name illegal'})
-        
-       
-        group = Group.objects.create_group(group_name, group_moderator, group_user)
+            return render(request, 'create_group.html', {'errmsg': 'group name illegal'})
+
+
+        group_user_id = '%d'%user.id
+        group = Group.objects.create(group_user_id=group_user_id, group_name=group_name, group_user=group_user)
         group.save()
 
-        return JsonResponse({'res':3, 'message':'Created'})
+        return redirect(reverse('group:index'))
 
-class GorupJoinView(View):
+class GroupJoinView(View):
+    def get(self, request):
+
+        return render(request, 'join_group.html')
 
     def post(self, request):
         user = request.user
         if not user.is_authenticated:
-            return JsonResponse({'res':0, 'errmsg':'Required sign in'})
+            return render(request, 'create_group.html', {'errmsg': 'Required sign in'})
 
         #receive info
-        username = request.POST.get('username')
-        group_name = request.POST.get('group_name')
+        user = request.POST.get('username')
+        group = request.POST.get('group_name')
 
-        try:
-            group = Group.objects.get(group_name=group_name)
+        #try:
+            #group = Group.objects.get(group_name=group_name)
         
-        except Group.DoesNotExist:
+        #except Group.DoesNotExist:
             # group name不存在
-            return JsonResponse({'res':1, 'errmsg': 'group does not exist'})
+            #return JsonResponse({'res':1, 'errmsg': 'group does not exist'})
 
-        if username in group:
+        #if username in group:
             # 用户名已存在
-            return JsonResponse({'res':2, 'errmsg':'user already joined in'})
-        
-        conn = get_redis_connection('default')
-        group_key = 'group_%d'%user.id
+            #return JsonResponse({'res':2, 'errmsg':'user already joined in'})
 
-        conn.hset(group_key, group_name, username)
+        Group.objects.filter(group_name=group).update(group_user=user)
 
-        return JsonResponse({'res':3, 'message':'Joined in'})
+        return redirect(reverse('group:index'))
+
 
 class GroupUnsubscribeView(View):
+    def get(self, request):
+        return render(request, 'unsubscribe.html')
+
     def post(self, request):
         user = request.user
         if not user.is_authenticated:
+            return render(request, 'create_group.html', {'errmsg': 'Required sign in'})
 
-            return JsonResponse({'res':0, 'errmsg':'Not Signed in'})
+        # receive info
+        user = request.POST.get('username')
+        group = request.POST.get('group_name')
 
-        username = request.POST.get('username')
-        group_name = request.POST.get('group_name')
+        # try:
+        # group = Group.objects.get(group_name=group_name)
 
-        if not username:
-            
-            return JsonResponse({'res':1, 'errmsg':'illegal username'})
+        # except Group.DoesNotExist:
+        # group name不存在
+        # return JsonResponse({'res':1, 'errmsg': 'group does not exist'})
 
-        try:
-            username = User.objects.get(username=username)
+        # if username in group:
+        # 用户名已存在
+        # return JsonResponse({'res':2, 'errmsg':'user already joined in'})
 
-        except User.DoesNotExist:
-            
-            return JsonResponse({'res':2, 'errmsg': 'User does not exist'})
-        
-        try:
-            group_name = Group.objects.get(group_name=group_name)
-
-        except Group.DoesNotExist:
-            
-            return JsonResponse({'res':3, 'errmsg': 'Group does not exist'})
-
-        conn = get_redis_connection('default')
-        group_key = 'group_%d'%user.id
-
-        conn.hdel(group_key, username)    
-
-        return JsonResponse({'res':4, 'message': 'Unsubscribe!'})
-
+        Group.objects.filter(group_name=group).update(group_user=None)
+        return redirect(reverse('group:index'))
 
 class EventCreateview(View):
 
+    def get(self, request):
+
+        return render(request, 'create_event.html')
+
     def post(self, request):
-        user = request.user
-        group = request.group
-
-        if not user.is_authenticated:
-            return JsonResponse({'res':0, 'errmsg':'Required sign in'})
-
-
         event_name = request.POST.get('event_name')
-        event_group = request.POST.get('event_group')
-        event_movie = request.POST.get('event_movie')
+        event_movie = request.POST.get('movie_name')
+        event_group = request.POST.get('group_name')
 
-        try:
-            group = Group.objects.get(group_name=group_name)
-        
-        except Group.DoesNotExist:
-            # group name不存在
-            return JsonResponse({'res':0, 'errmsg': 'Group does not exist' })
+        #movie = request.movie
+        #group = request.group
 
-        try:
-            movie = Movie.objects.get(movie_name=movie_name)
 
-        except Movie.DoesNotExist:
+        if not all([event_name, event_movie, event_group]):
+            # lack data
+            return render(request, 'create_group.html', {'errmsg': 'Requiring more information'})
 
-            return JsonResponse({'res':1, 'errmsg': 'Movie does not exist'})
-     
+        # if user.user_type == 0:
+        # return render(request, 'create_group.html', {'errmsg': 'illegal user'})
+
         try:
             event = Event.objects.get(event_name=event_name)
-        
+
         except Event.DoesNotExist:
             # group name不存在
             event = None
-        
+
         if event:
-            # 名已存在
-            return JsonResponse({'res':2, 'errmsg':'event name illegal'})
+            # 用户名已存在
+            return render(request, 'create_group.html', {'errmsg': 'group name illegal'})
 
-        conn = get_redis_connection('default')
-        event_key = 'event_%'%group_id
+        #event = Event()
+        #event.event_name = event_name
+        #event.event_movie = event_movie
+        #event.event_group = event_group
 
-        conn.hset(event_key, event_name, event_movie)
+        #group_user_id = '%d'%user.id
+        event = Event.objects.create(event_name=event_name, event_movie=event_movie, event_group=event_group)
+        event.save()
 
-        return JsonResponse({'res':3, 'message':'Event created'})
+        return redirect(reverse('group:event'))
 
 class EventView(View):
     def get(self, request):
@@ -179,7 +166,7 @@ class EventView(View):
         context = cache.get('event_page_data')
         
         if context is None:
-            print('设置缓存')
+            print('Setting Cache')
             # 缓存中没有数据
 
             events = Event.objects.all()
@@ -196,76 +183,93 @@ class EventView(View):
         return render(request, 'event.html', context)
 
 class VoteCreateview(View):
+
+    def get(self, request):
+
+        return render(request, 'create_vote.html')
+
+    def post(self, request):
+        vote_movie = request.POST.get('vote_movie')
+        vote_name = request.POST.get('vote_name')
+        open_time = request.POST.get('open_time')
+        close_time = request.POST.get('close_time')
+        vote_event = request.POST.get('vote_event')
+
+        #vote = request.vote
+
+        if not all([vote_movie,vote_name, open_time,close_time, vote_event,]):
+            # lack data
+            return render(request, 'create_vote.html', {'errmsg': 'Requiring more information'})
+
+        # if user.user_type == 0:
+        # return render(request, 'create_group.html', {'errmsg': 'illegal user'})
+
+        #try:
+            #vote = Vote.objects.get(vote_name=vote_name)
+
+        #except Vote.DoesNotExist:
+            # group name不存在
+            #Vote = None
+
+        #if vote:
+            # 用户名已存在
+            #return render(request, 'create_vote.html', {'errmsg': 'vote name illegal'})
+
+        #vote = Vote()
+        #vote.vote_movie = vote_movie
+        #vote.open_time = open_time
+        #vote.close_time = close_time
+        #vote.vote_event = vote_event
+        vote = Vote.objects.create(vote_name=vote_name, vote_movie=vote_movie, close_time=close_time, vote_event=vote_event)
+        vote.save()
+
+        return redirect(reverse('group:vote'))
+
+class VoteListView(View):
+    def get(self, request):
+        '''显示列表页'''
+
+        votes = Vote.objects.all()
+
+        context = {'votes': votes}
+
+        return render(request, 'vote.html', context)
+
+class VoteDetailView(View):
+    def get(self, request):
+
+        return render(request, 'vote_detail.html')
+
     def post(self, request):
         user = request.user
-        event = request.event
         if not user.is_authenticated:
-            return JsonResponse({'res':0, 'errmsg':'Required sign in'})
+            return JsonResponse({'res': 0, 'errmsg': 'User is not signed in!'})
+
+        vote_name = request.POST.get('vote_name')
+        vote_record = request.POST.get('vote_record')
 
 
-        vote_event = request.POST.get('vote_event')
-        close_time = request.POST.get('close_time')
-        open_time = request.POST.get('open_time')
-        vote_movie = request.POST.get('vote_movie')
+        if not all([vote_name, vote_record]):
+            # lack data
+            return render(request, 'vote_detail.html', {'errmsg': 'Requiring more information'})
 
-        try:
-            event = Event.objects.get(event_name=event_name)
-        
-        except Event.DoesNotExist:
-            # event name不存在
-            return JsonResponse({'res':0, 'errmsg': 'Event does not exist' })
+        # if user.user_type == 0:
+        # return render(request, 'create_group.html', {'errmsg': 'illegal user'})
 
-        try:
-            movie = Movie.objects.get(movie_name=movie_name)
+        vote_record = VoteRecord()
+        vote_record.vote = vote_name
+        vote_record.vote_record = vote_record
 
-        except Movie.DoesNotExist:
+        return redirect(reverse('group:vote_detail'))
 
-            return JsonResponse({'res':1, 'errmsg': 'Movie does not exist'})
-     
-        try:
-            vote = Vote.objects.get(id=id)
-        
-        except Event.DoesNotExist:
-            # group name不存在
-            vote = None
-        
-        if vote:
-            # id已存在
-            return JsonResponse({'res':2, 'errmsg':'vote already exist'})
-
-        conn = get_redis_connection('default')
-        vote_key = 'vote_%d'%event.id
-
-        conn.hset(vote_key, vote_event, close_time, open_time, vote_movie)
-
-class VoteView(View):
-    def get(self, request):
-        '''显示首页'''
-        # 尝试从缓存中获取数据
-        context = cache.get('vote_page_data')
-        
-        if context is None:
-            print('setting cache')
-            # 缓存中没有数据
-            
-            votes = Vote.objects.all()
-            events = Event.objects.all()
-            
-
-            context = {'votes': votes,
-                       'events': events,
-                       }
-            # 设置缓存
-            # key  value timeout
-            cache.set('vote.html', context, 3600)
-    
-
-        return render(request, 'event.html', context)
 
 class VoteRecordView(View):
-    def vote_record(self, request):
-        group_list = VoteRecord.objects.all()
-        context = get_vote_record_common_data(request,vote_record)
+    def get(self, request):
+
+
+        records = VoteRecord.objects.all()
+
+        context = {'records': records}
 
         return render(request, 'vote_record.html', context)   
 

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}MyMovieSite:Register{% endblock title %}
+{% block topfiles %}
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+{% endblock topfiles %}
+{% block header_con %}{% endblock header_con %}
+{% block search_bar %}{% endblock search_bar %}
+{% block body %}
+    <div class="register_con">
+        <div class="l_con fl">
+            <div class="reg_slogan">OOD TEAM 3</div>
+            <div class="reg_banner"></div>
+        </div>
+
+        <div class="r_con fr">
+            <div class="reg_title clearfix">
+                <h1>Create an Event</h1>
+                <a href="{% url 'group:index' %}">Back</a>
+            </div>
+            <div class="reg_form clearfix">
+                <form method="post" action="/group/create_event/">
+                    {% csrf_token %}
+                <ul>
+                    <li>
+                        <label>Event:</label>
+                        <input type="text" name="event_name" id="event_name">
+                    </li>
+                    <li>
+                        <label>Movie:</label>
+                        <input type="text" name="event_movie" id="event_movie">
+                    </li>
+                    <li>
+                        <label>Group:</label>
+                        <input type="text" name="event_group" id="event_group">
+                    </li>
+
+                    <li class="agreement">
+                        <input type="checkbox" name="allow" id="allow" checked="checked">
+                        <label>Concent"User Agreement"</label>
+                    </li>
+                    <li class="reg_sub">
+                        <input type="submit" value="Create" name="">
+                    </li>
+                </ul>
+                </form>
+                {{ errmsg }}
+            </div>
+
+        </div>
+
+    </div>
+{% endblock body %}

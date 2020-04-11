@@ -1,24 +1,38 @@
-{% extends 'base_detail_list.html' %}
-{% block title %}MyMovieSite-MovieList{% endblock title %}
-{% block main_content %}
-  <div class="breadcrumb">
-    <a href="#">All Movie</a>
-    <span>></span>
-    <a href="#">{{ movie.name }}</a>
-  </div>
-
-
-    <div class="r_wrap fr clearfix">
-
-      <ul class="movie_list clearfix">
-        {% for sku in skus_page %}
-        <li>
-          <a href="{% url 'movie:detail' movie.id %}"></a>
-          <h4><a href="{% url 'movies:detail' movie.id %}">{{ movie.name }}</a></h4>
-        </li>
-        {% endfor %}
-      </ul>
-
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}MyMovieSite-HomePage{% endblock title %}
+{% block topfiles %}
+    <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/slide.js' %}"></script>
+{% endblock topfiles %}
+{% block body %}
+    <div class="navbar_con">
+        <div class="navbar">
+            <h1 class="fl">Movies</h1>
+            <ul class="navlist fl">
+                <li><a href="{% url 'group:index' %}">Groups</a></li>
+                <li class="interval">|</li>
+                <li><a href="">Review</a></li>
+                <li class="interval">|</li>
+                <li><a href="">Trailer</a></li>
+            </ul>
+        </div>
     </div>
-  </div>
-{% endblock main_content %}
+
+    <div class="l_wrap fl clearfix">
+          <div class="panel-body">
+            {% for movie in movies %}
+              <div class="movie">
+                <h3><a href="{% url 'movie:list' %}">{{movie.movie_name }}</a></h3>
+              </div>
+            {% empty %}
+              <div class="movie">
+                  <h3>There is no movie</h3>
+              </div>
+            {% endfor %}
+          </div>
+    </div>
+
+
+{% endblock body %}

@@ -2,13 +2,14 @@ from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import View
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from user.models import User
 from group.models import Group, Event, Vote
 from django_redis import get_redis_connection
 from utils.mixin import LoginRequiredMixin
 import re
+import time
 
 class RegisterView(View):
     '''Functions: register'''
@@ -27,7 +28,7 @@ class RegisterView(View):
         # 进行数据校验
         if not all([username, password, email]):
             # lack data
-            return render(request, 'register.html', {'errmsg': 'Requiring more infomation'})
+            return render(request, 'register.html', {'errmsg': 'Requiring more information'})
 
         # check email format 
         if not re.match(r'^[a-z0-9][\w.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
@@ -37,7 +38,7 @@ class RegisterView(View):
         
         if allow != 'on':
             
-            return render(request, 'register.html', {'errmsg': 'Please consent user aggrement'})
+            return render(request, 'register.html', {'errmsg': 'Please consent user agreement'})
 
         # check the user name is or is not correct
         try:
@@ -49,14 +50,14 @@ class RegisterView(View):
 
         if user:
             # 用户名已存在
-            return render(request, 'register.html', {'errmsg': 'User name has been registed'})
+            return render(request, 'register.html', {'errmsg': 'User name has been registered'})
 
         # 进行业务处理: 进行用户注册
         user = User.objects.create_user(username, email, password)
         user.is_active = 1
         user.save()
 
-        return redirect(reverse('user:login/'))
+        return redirect(reverse('user:login'))
 
 
 # /user/login
@@ -74,7 +75,7 @@ class LoginView(View):
             checked = ''
 
         # 使用模板
-        return render(request, 'login.html', {'username':username, 'checked':checked})
+        return render(request, 'login.html', {'username': username, 'checked': checked})
 
     def post(self, request):
         '''登录校验'''
@@ -98,9 +99,9 @@ class LoginView(View):
 
                 # 获取登录后所要跳转到的地址
                 # 默认跳转到首页
-                next_url = request.GET.get('next', reverse('movie:list'))
-
                 # 跳转到next_url
+                next_url = request.GET.get('next', reverse('movie:list'))
+                
                 response = redirect(next_url) # HttpResponseRedirect
 
                 # 判断是否需要记住用户名
@@ -161,7 +162,7 @@ class UserGroupView(LoginRequiredMixin, View):
 
         context = {'group':groups}
 
-        return render(request, 'user_group.html', context)
+        return render(request, 'index.html', context)
 
 
 

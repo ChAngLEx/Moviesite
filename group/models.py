@@ -1,7 +1,6 @@
 from django.db import models
 from user.models import User
 
-
 class Group(models.Model):
     class Meta:
         db_table = 'df_group'
@@ -27,7 +26,7 @@ class Event(models.Model):
         verbose_name = 'Event'
         verbose_name_plural = verbose_name
 
-    event_name = models.CharField(max_length=50)
+    event_name = models.CharField(max_length=50, default=1)
     event_group = models.ForeignKey(Group, on_delete=models.CASCADE, default=1)
     event_movie = models.ForeignKey(MovieList, on_delete=models.CASCADE, default=1)    
 
@@ -38,6 +37,7 @@ class Vote(models.Model):
         verbose_name_plural = verbose_name
 
     vote_movie = models.ForeignKey(MovieList, on_delete=models.CASCADE, default=1)
+    vote_name = models.CharField(max_length=30, default=1)
     open_time = models.DateTimeField(auto_now_add=True)
     close_time = models.DateTimeField(auto_now=True)
     vote_event = models.ForeignKey(Event, on_delete=models.CASCADE, default=1)
@@ -53,7 +53,7 @@ class VoteRecord(models.Model):
         (0, 'No')
         )
     vote = models.ForeignKey(Vote, on_delete=models.CASCADE, default=1)
-    vote_record = models.SmallIntegerField(choices=VOTE_RECORD,default=1)
+    vote_record = models.SmallIntegerField(choices=VOTE_RECORD, default=1)
     
 
 class UserGroup(models.Model):

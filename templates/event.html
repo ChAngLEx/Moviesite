@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}MyMovieSite-HomePage{% endblock title %}
+{% block title %}MyMovieSite-EventPage{% endblock title %}
 {% block topfiles %}
     <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
@@ -11,11 +11,13 @@
         <div class="navbar">
             <h1 class="fl">Event</h1>
             <ul class="navlist fl">
-                <li><a href="">Group</a></li>
+                <li><a href="{% url 'group:index' %}">Group</a></li>
                 <li class="interval">|</li>
-                <li><a href="">Vote</a></li>
+                <li><a href="{% url 'group:vote' %}">Vote</a></li>
                 <li class="interval">|</li>
-                <li><a href="">User Center</a></li>
+                <li><a href="{% url 'movie:list' %}">Movie</a></li>
+                <li class="interval">|</li>
+                <li><a href="{% url 'group:create_event' %}">Create an Event</a></li>
             </ul>
         </div>
     </div>

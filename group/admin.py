@@ -16,7 +16,7 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(Vote)
 class VoteAdmin(admin.ModelAdmin):
-    list_display = ('vote_movie', 'open_time', 'close_time', 'vote_event')
+    list_display = ('vote_movie', 'vote_name', 'open_time', 'close_time', 'vote_event')
 
 @admin.register(VoteRecord)
 class VoteRecordAdmin(admin.ModelAdmin):
