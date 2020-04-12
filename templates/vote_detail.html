@@ -23,10 +23,13 @@
                     {% csrf_token %}
                 <ul>
                     <li>
-                        <h4>Please Input your vote results: yes or no</h4>
-                        <input type="text" name="vote_name" id="vote_name">
+                        <label>Vote:</label>
+                        <input type="text" name="vote_name" value="">
                     </li>
-
+                     <h3>Please Input your vote results: yes or no</h3>
+                     <input type="radio" name="vote_record", value=1><label>YES</label>
+                     {# <input type="radio" name="vote_record", value="no"><label>NO</label> #}
+                     <input type="radio" name="vote_record", value=0><label>NO</label>
                     <li class="reg_sub">
                         <input type="submit" value="Submit" name="">
                     </li>

@@ -19,15 +19,11 @@
 
     <div class="l_wrap fl clearfix">
           <div class="panel-body">
-            {% for record in records  %}
+
               <div class="record">
-                  <h3><lable>Records:</lable></lable><a href="{% url 'group:vote_record' %}">{{record.vote_record }}</a> </h3>
+                  <h3><lable>Yes:</lable></lable><a href="{% url 'group:vote_record' %}">{{Yes}}</a> </h3>
+                  <h3><lable>No:</lable></lable><a href="{% url 'group:vote_record' %}">{{No}}</a> </h3>
               </div>
-            {% empty %}
-              <div class="vote">
-                  <h3>There is no record</h3>
-              </div>
-            {% endfor %}
           </div>
     </div>
 

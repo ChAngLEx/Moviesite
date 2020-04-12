@@ -20,8 +20,8 @@
         </div>
     </div>
 
-    <div class="l_wrap fl clearfix">
-          <div class="panel-body">
+
+
             {% for movie in movies %}
               <div class="movie">
                 <h3><a href="{% url 'movie:list' %}">{{movie.movie_name }}</a></h3>
@@ -31,8 +31,8 @@
                   <h3>There is no movie</h3>
               </div>
             {% endfor %}
-          </div>
-    </div>
+
+
 
 
 {% endblock body %}

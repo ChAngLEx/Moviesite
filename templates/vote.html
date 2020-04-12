@@ -20,19 +20,19 @@
         </div>
     </div>
 
-    <div class="l_wrap fl clearfix">
-          <div class="panel-body">
+
+
+
             {% for vote in votes %}
-              <div class="movie">
-                <h3><a href="{% url 'group:vote_detail' %}">{{vote.vote_movie }}</a></h3>
+              <div class="vote">
+                <h3><a href="{% url 'group:vote_detail' %}">{{vote.vote_name }}</a></h3>
               </div>
             {% empty %}
               <div class="votes">
                   <h3>There is no vote</h3>
               </div>
             {% endfor %}
-          </div>
-    </div>
+
 
 
 {% endblock body %}
