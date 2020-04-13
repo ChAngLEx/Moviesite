@@ -107,7 +107,8 @@ class GroupUnsubscribeView(View):
             return render(request, 'create_group.html', {'errmsg': 'Required sign in'})
 
         # receive info
-        user = request.POST.get('username')
+        #user = request.POST.get('username')
+        user = request.user.id
         group = request.POST.get('group_name')
 
         # try:
@@ -121,11 +122,13 @@ class GroupUnsubscribeView(View):
         # 用户名已存在
         # return JsonResponse({'res':2, 'errmsg':'user already joined in'})
         #group_user_id = Group.objects.filter(group_name=group).get(group)
-        user_id = User.objects.get(username=user).id
+        #user_id = User.objects.get(username=user).id
         group_id = Group.objects.get(group_name=group).id
 
-        UserGroup.objects.filter(Q(group_id=group_id) & Q(user_id=user_id)).delete()
+        UserGroup.objects.filter(Q(group_id=group_id) & Q(user_id=user)).delete()
         return redirect(reverse('group:index'))
+
+
 
 class EventCreateview(View):
 
@@ -167,7 +170,7 @@ class EventCreateview(View):
         #event.event_group = event_group
         event_movie_id = MovieList.objects.get(movie_name=event_movie).id
         event_group_id = Group.objects.get(group_name=event_group).id
-        print(event_movie_id, event_group_id)
+        #print(event_movie_id, event_group_id)
         #group_user_id = '%d'%user.id
         event = Event.objects.create(event_name=event_name, event_movie_id=event_movie_id, event_group_id=event_group_id)
         event.save()

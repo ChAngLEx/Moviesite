@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}MyMovieSite:Register{% endblock title %}
+{% block title %}MyMovieSite:Movie{% endblock title %}
 {% block topfiles %}
     <script type="text/javascript" src="{% static 'js/jquery-1.12.4.min.js' %}"></script>
 {% endblock topfiles %}
@@ -15,32 +15,28 @@
 
         <div class="r_con fr">
             <div class="reg_title clearfix">
-                <h1>Create an Event</h1>
-                <a href="{% url 'group:event' %}">Back</a>
+                <h1>Add a Movie</h1>
+                <a href="{% url 'movie:list' %}">Back</a>
             </div>
             <div class="reg_form clearfix">
-                <form method="post" action="/group/create_event/">
+                <form method="post" action="/movie/pull_movie/">
                     {% csrf_token %}
                 <ul>
                     <li>
-                        <label>Event:</label>
-                        <input type="text" name="event_name" id="event_name">
-                    </li>
-                    <li>
                         <label>Movie:</label>
-                        <input type="text" name="event_movie" id="event_movie">
+                        <input type="text" name="movie_name" id="movie_name">
                     </li>
                     <li>
-                        <label>Group:</label>
-                        <input type="text" name="event_group" id="event_group">
+                        <label>Trailer:</label>
+                        <input type="text" name="trailer_links" id="trailer_links">
+                    </li>
+                    <li>
+                        <label>Review:</label>
+                        <input type="text" name="review_links" id="review_links">
                     </li>
 
-                    <li class="agreement">
-                        <input type="checkbox" name="allow" id="allow" checked="checked">
-                        <label>Concent"User Agreement"</label>
-                    </li>
                     <li class="reg_sub">
-                        <input type="submit" value="Create" name="">
+                        <input type="submit" value="Add" name="">
                     </li>
                 </ul>
                 </form>
