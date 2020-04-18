@@ -16,18 +16,18 @@ class ListView(View):
 
         return render(request, 'list.html', context)
 
-class PullMovieView(View):
-    def get(self, request):
+#class PullMovieView(View):
+    #def get(self, request):
 
-        return render(request, 'pull_movie.html')
+        #return render(request, 'pull_movie.html')
 
-    def post(self, request):
+    #def post(self, request):
 
-        movie_name = request.POST.get('movie_name')
-        trailer_links = request.POST.get('trailer_links')
-        review_links = request.POST.get('review_links')
+        #movie_name = request.POST.get('movie_name')
+        #links = request.POST.get('links')
+        #review_links = request.POST.get('review_links')
 
-        movie = Movie.objects.create(movie_name=movie_name, trailer_links=trailer_links, review_links=review_links)
-        movie.save()
+        #movie = Movie.objects.create(movie_name=movie_name, trailer_links=trailer_links, review_links=review_links)
+        #movie.save()
 
-        return redirect(reverse('movie:list'))
+        #return redirect(reverse('movie:list'))

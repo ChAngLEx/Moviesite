@@ -76,16 +76,15 @@ class GroupJoinView(View):
         user = request.user.id
         group = request.POST.get('group_name')
 
-        #try:
-            #group = Group.objects.get(group_name=group_name)
-        
-        #except Group.DoesNotExist:
-            # group name不存在
-            #return JsonResponse({'res':1, 'errmsg': 'group does not exist'})
+        try:
+            group = Group.objects.get(group_name=group)
 
-        #if username in group:
-            # 用户名已存在
-            #return JsonResponse({'res':2, 'errmsg':'user already joined in'})
+        except Group.DoesNotExist:
+            return render(request, 'join_group.html', {'errmsg': 'group do not exist'})
+
+        if group:
+            return render(request, 'join_group.html', {'errmsg': 'join in successfully'})
+
 
         group_id = Group.objects.get(group_name=group).id
 
@@ -111,16 +110,15 @@ class GroupUnsubscribeView(View):
         user = request.user.id
         group = request.POST.get('group_name')
 
-        # try:
-        # group = Group.objects.get(group_name=group_name)
+        try:
+            group = Group.objects.get(group_name=group)
 
-        # except Group.DoesNotExist:
-        # group name不存在
-        # return JsonResponse({'res':1, 'errmsg': 'group does not exist'})
+        except Group.DoesNotExist:
+            return render(request, 'unsubscribe.html', {'errmsg': 'group do not exist'})
 
-        # if username in group:
-        # 用户名已存在
-        # return JsonResponse({'res':2, 'errmsg':'user already joined in'})
+        if group:
+            return render(request, 'unsubscribe.html', {'errmsg': 'unsubscribe successfully'})
+
         #group_user_id = Group.objects.filter(group_name=group).get(group)
         #user_id = User.objects.get(username=user).id
         group_id = Group.objects.get(group_name=group).id
@@ -141,18 +139,10 @@ class EventCreateview(View):
         event_movie = request.POST.get('event_movie')
         event_group = request.POST.get('event_group')
 
-        #movie = request.movie
-        #group = request.group
-        #print("*********************************************************************************************")
-
-        #if not all([event_name, event_movie, event_group]):
+        if not all([event_name, event_group,event_movie]):
             # lack data
-            #return render(request, 'create_group.html', {'errmsg': 'Requiring more information'})
+            return render(request, 'create_event.html', {'errmsg': 'Requiring more information'})
 
-        # if user.user_type == 0:
-        # return render(request, 'create_group.html', {'errmsg': 'illegal user'})
-        #print("_" * 122)
-        #print(event_movie)
         try:
             event = Event.objects.get(event_name=event_name)
 
@@ -162,16 +152,24 @@ class EventCreateview(View):
 
         if event:
             # 用户名已存在
-            return render(request, 'create_group.html', {'errmsg': 'group name illegal'})
+            return render(request, 'create_event.html', {'errmsg': 'event name existed'})
 
-        #event = Event()
-        #event.event_name = event_name
-        #event.event_movie = event_movie
-        #event.event_group = event_group
+        try:
+            event_group = Group.objects.get(group_name=event_group)
+
+        except Group.DoesNotExist:
+            # group name不存在
+            return render(request, 'create_event.html', {'errmsg': 'group not exist'})
+
+        try:
+            event_movie = Movie.objects.get(movie_name=event_movie)
+
+        except Movie.DoesNotExist:
+            # group name不存在
+            return render(request, 'create_event.html', {'errmsg': 'movie not exist'})
+
         event_movie_id = MovieList.objects.get(movie_name=event_movie).id
         event_group_id = Group.objects.get(group_name=event_group).id
-        #print(event_movie_id, event_group_id)
-        #group_user_id = '%d'%user.id
         event = Event.objects.create(event_name=event_name, event_movie_id=event_movie_id, event_group_id=event_group_id)
         event.save()
 
@@ -203,25 +201,37 @@ class VoteCreateview(View):
         close_time = request.POST.get('close_time')
         vote_event = request.POST.get('vote_event')
 
-        #vote = request.vote
 
-        if not all([vote_movie,vote_name, open_time,close_time, vote_event,]):
+        if not all([vote_movie, vote_name, open_time, close_time, vote_event]):
             # lack data
             return render(request, 'create_vote.html', {'errmsg': 'Requiring more information'})
 
         # if user.user_type == 0:
         # return render(request, 'create_group.html', {'errmsg': 'illegal user'})
 
-        #try:
-            #vote = Vote.objects.get(vote_name=vote_name)
+        try:
+            vote = Vote.objects.get(vote_name=vote_name)
 
-        #except Vote.DoesNotExist:
+        except Vote.DoesNotExist:
+            vote = None
+
+        if vote:
+            return render(request, 'create_vote.html', {'errmsg': 'vote name illegal'})
+
+        try:
+            vote_event = Event.objects.get(event_name=vote_event)
+
+        except Event.DoesNotExist:
             # group name不存在
-            #Vote = None
+            return render(request, 'create_vote.html', {'errmsg': 'event not exist'})
 
-        #if vote:
-            # 用户名已存在
-            #return render(request, 'create_vote.html', {'errmsg': 'vote name illegal'})
+        try:
+            vote_movie = Movie.objects.get(movie_name=vote_movie)
+
+        except Movie.DoesNotExist:
+            # group name不存在
+            return render(request, 'create_vote.html', {'errmsg': 'movie not exist'})
+
 
         #vote = Vote()
         #vote.vote_movie = vote_movie
@@ -251,6 +261,9 @@ class VoteDetailView(View):
         return render(request, 'vote_detail.html')
 
     def post(self, request):
+
+
+
         user = request.user
         if not user.is_authenticated:
             return JsonResponse({'res': 0, 'errmsg': 'User is not signed in!'})
@@ -261,26 +274,21 @@ class VoteDetailView(View):
         #vote_id = Vote.objects.get(vote_event_id=event_id)
         vote_name = request.POST.get('vote_name')
         vote_id = Vote.objects.get(vote_name=vote_name).id
-        vote_record = request.POST.get('vote_record')
+        vote_record = request.POST['vote_record']
 
+        user_id = request.user.id
 
-        #if not all([vote_name, vote_record]):
-            # lack data
-            #return render(request, 'vote_detail.html', {'errmsg': 'Requiring more information'})
+        vote_records = VoteRecord.objects.all()
+
+        for _, _, v_i, u_i in vote_records:
+            if v_i == vote_id and u_i == user_id:
+                return render(request, 'create_vote.html', {'errmsg': 'event not exist'})
+
 
         # if user.user_type == 0:
         # return render(request, 'create_group.html', {'errmsg': 'illegal user'})
 
-        #vote_record = VoteRecord()
-        #vote_record.vote = vote_name
-        #vote_record.vote_record = vote_record
-        #vote_id = 1
-        #vote_record = 1
-        if vote_record == 1:
-            vote_result = 1
-        else:
-            vote_result = 0
-        vote_record = VoteRecord.objects.create(vote_record=vote_result, vote_id=vote_id)
+        vote_record = VoteRecord.objects.create(vote_record=vote_record, vote_id=vote_id)
         vote_record.save()
 
         return redirect(reverse('group:vote_record'))
@@ -289,7 +297,6 @@ class VoteDetailView(View):
 
 class VoteRecordView(View):
     def get(self, request):
-
 
         records = VoteRecord.objects.all()
 

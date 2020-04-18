@@ -54,6 +54,7 @@ class VoteRecord(models.Model):
         )
     vote = models.ForeignKey(Vote, on_delete=models.CASCADE, default=1)
     vote_record = models.SmallIntegerField(choices=VOTE_RECORD, default=1)
+    user = models.ForeignKey('user.User', on_delete=models.CASCADE, default=1)
     
 
 class UserGroup(models.Model):
