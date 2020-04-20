@@ -11,20 +11,17 @@
         <div class="navbar">
             <h1 class="fl">Vote Record</h1>
             <ul class="navlist fl">
-                <li><a href="{% url 'group:vote' %}">Vote</a></li>
+                <li><a href="{% url 'group:vote' %}">Back</a></li>
             </ul>
         </div>
     </div>
 
-
-    <div class="l_wrap fl clearfix">
-          <div class="panel-body">
-
-              <div class="record">
-                  <h3><lable>Yes:</lable></lable><a href="{% url 'group:vote_record' %}">{{Yes}}</a> </h3>
-                  <h3><lable>No:</lable></lable><a href="{% url 'group:vote_record' %}">{{No}}</a> </h3>
-              </div>
+          <div class="list_group">
+            <h3>{{ vote_records }}</h3>
           </div>
-    </div>
+
+
+
+
 
 {% endblock body %}

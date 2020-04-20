@@ -11,28 +11,29 @@
         <div class="navbar">
             <h1 class="fl">Event</h1>
             <ul class="navlist fl">
+                <li><a href="{% url 'movie:list' %}">Home</a></li>
+                <li class="interval">|</li>
+                <li><a href="{% url 'group:create_event' %}">Create an Event</a></li>
+                <li class="interval">|</li>
                 <li><a href="{% url 'group:index' %}">Group</a></li>
                 <li class="interval">|</li>
                 <li><a href="{% url 'group:vote' %}">Vote</a></li>
-                <li class="interval">|</li>
-                <li><a href="{% url 'movie:list' %}">Movie</a></li>
-                <li class="interval">|</li>
-                <li><a href="{% url 'group:create_event' %}">Create an Event</a></li>
+
             </ul>
         </div>
     </div>
 
 
 
-            {% for event in events %}
-              <div class="event">
-                <h3><a href="{% url 'group:event' %}">{{event.event_name }}</a></h3>
-              </div>
-            {% empty %}
-              <div class="event">
-                  <h3>There is no event</h3>
-              </div>
-            {% endfor %}
+    {% for event in events %}
+      <div class="list_group">
+        <h3><a href="{% url 'group:vote' %}">{{event.event_name }}</a></h3>
+      </div>
+    {% empty %}
+      <div class="list_table">
+          <h3>There is no event</h3>
+      </div>
+    {% endfor %}
 
 
 {% endblock body %}

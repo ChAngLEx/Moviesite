@@ -7,17 +7,18 @@
 {% block header_con %}{% endblock header_con %}
 {% block search_bar %}{% endblock search_bar %}
 {% block body %}
-    <div class="register_con">
-        <div class="l_con fl">
-            <div class="reg_slogan">OOD TEAM 3</div>
-            <div class="reg_banner"></div>
+    <div class="navbar_con">
+        <div class="navbar">
+            <h1 class="fl">Create an Event</h1>
+            <ul class="navlist fl">
+                <li><a href="{% url 'group:event' %}">Back</a></li>
+            </ul>
         </div>
+    </div>
+
+    <div class="register_con">
 
         <div class="r_con fr">
-            <div class="reg_title clearfix">
-                <h1>Create an Event</h1>
-                <a href="{% url 'group:event' %}">Back</a>
-            </div>
             <div class="reg_form clearfix">
                 <form method="post" action="/group/create_event/">
                     {% csrf_token %}

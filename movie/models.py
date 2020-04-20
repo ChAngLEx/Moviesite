@@ -7,7 +7,7 @@ class Movie(models.Model):
         verbose_name_plural = verbose_name
 
     movie_name = models.CharField(max_length=50)
-    movie_link = models.URLField(max_length=100, verbose_name='urls')
+    movie_link = models.URLField(max_length=200, verbose_name='urls')
     movie_image = models.ImageField(upload_to='movies', verbose_name='movie images')
 
 class Image(models.Model):
@@ -18,4 +18,3 @@ class Image(models.Model):
 
     movie = models.ForeignKey('Movie', on_delete=models.CASCADE, verbose_name='movie')
     image = models.ImageField(upload_to='movies', verbose_name='images path')
-

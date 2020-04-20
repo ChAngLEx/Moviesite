@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import View
 from movie.models import Movie
+from django.conf import settings
+import os
 
 class ListView(View):
     '''列表页'''
@@ -11,8 +13,12 @@ class ListView(View):
         '''显示列表页'''
 
         movies = Movie.objects.all()
+        img_list = []
+        for static_path in settings.STATICFILES_DIRS:
+            img_list.extend(os.listdir(os.path.join(static_path, 'images/movies')))
 
-        context = {'movies': movies}
+        context = {'movies': movies,
+                   'img_list': img_list}
 
         return render(request, 'list.html', context)
 

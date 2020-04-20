@@ -20,7 +20,7 @@ class VoteAdmin(admin.ModelAdmin):
 
 @admin.register(VoteRecord)
 class VoteRecordAdmin(admin.ModelAdmin):
-    list_display = ('vote', 'vote_record')
+    list_display = ('vote', 'vote_record', 'vote_user')
 
 @admin.register(UserGroup)
 class UserGroupAdmin(admin.ModelAdmin):

@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'FianlPro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'finalpro',
+        'NAME': 'lasttime',
         'USER': 'root',
         'PASSWORD': '123lyla',
         'HOST': 'localhost',
-        'PORT':3306,
+        'PORT': 3306,
     }
 }
 

@@ -11,24 +11,28 @@
         <div class="navbar">
             <h1 class="fl">Vote</h1>
             <ul class="navlist fl">
+                <li><a href="{% url 'movie:list' %}">Home</a></li>
+                <li class="interval">|</li>
                 <li><a href="{% url 'group:create_vote' %}">Create a Vote</a></li>
                 <li class="interval">|</li>
-                <li><a href="{% url 'group:event' %}">Event</a></li>
-                <li class="interval">|</li>
                 <li><a href="{% url 'group:vote_record' %}">Vote Record</a></li>
+                <li class="interval">|</li>
+                <li><a href="{% url 'group:index' %}">Group</a></li>
+                <li class="interval">|</li>
+                <li><a href="{% url 'group:event' %}">Event</a></li>
+
             </ul>
         </div>
     </div>
 
 
 
-
             {% for vote in votes %}
-              <div class="vote">
+              <div class="list_group">
                 <h3><a href="{% url 'group:vote_detail' %}">{{vote.vote_name }}</a></h3>
               </div>
             {% empty %}
-              <div class="votes">
+              <div class="list_table">
                   <h3>There is no vote</h3>
               </div>
             {% endfor %}
