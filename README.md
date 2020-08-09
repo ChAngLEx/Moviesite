@@ -1,7 +1,7 @@
 # Moviesite
 Django/OOD
 
-What movie should we watch? This is a typical issue when friends and family decide to watch a movie together. You will be required to develop a project that should help solve this problem. The key features are described in following paragraphs. Students are not limited to these features. Students are free to use their creativity and include other features:
+What movie should we watch? This is a typical issue when friends and family decide to watch a movie together.The key features are described in following paragraphs. Students are not limited to these features. Students are free to use their creativity and include other features:
 
 1.	The system shall allow a group moderator to create a movie watcher’s group
 2.	The system shall allow the moderator to invite family and friends to join the group
